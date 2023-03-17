@@ -1,0 +1,28 @@
+kind: ZarfPackageConfig
+metadata:
+  name: jenkins
+  description: Deploy jenkins using a helm chart
+  version: 0.0.1
+
+components:
+  - name: prepare-jenkins
+    required: true
+    manifests:
+      - name: jenkins-volume
+        namespace: jenkins
+        files: 
+          - manifests/jenkins-sa.yaml
+          - manifests/jenkins-volume.yaml
+
+  - name: jenkins
+    required: true
+    charts:
+      - name: jenkins
+        version: 4.3.8
+        namespace: jenkins
+        url: https://charts.jenkins.io
+        valuesFiles:
+          - values.yaml
+    images:
+      - jenkins/jenkins:2.387.1-jdk11
+      - kiwigrid/k8s-sidecar:1.15.0
